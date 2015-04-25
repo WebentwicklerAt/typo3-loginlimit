@@ -1,0 +1,20 @@
+# cat=basic; type=boolean; label=Frontend: Enable login limit for Frontend.
+enableFrontend = 1
+
+# cat=basic; type=boolean; label=Backend: Enable login limit for Backend.
+enableBackend = 1
+
+# cat=basic; type=boolean; label=Clean up at login: Enable clean up expired entries at login, alternatively a scheduler task can be set-up.
+enableCleanUpAtLogin = 1
+
+# cat=basic; type=boolean; label=Delay failed login: Every failed login attempt delays login for 1 second. Max. 10 seconds.
+delayLogin = 1
+
+# cat=basic; type=integer; label=Max allowed retries: Number of failed login attempts within findtime causing a ban for bantime.
+maxretry = 5
+
+# cat=basic; type=integer; label=Find time: Time frame (in seconds) to look for failed login attempts.
+findtime = 600
+
+# cat=basic; type=integer; label=Ban time: Duration (in seconds) to be banned for. Negative number for "permanent" ban.
+bantime = 3600

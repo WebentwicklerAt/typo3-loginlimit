@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" target-language="de" datatype="plaintext" original="messages" date="2015-04-23T11:23:00Z" product-name="loginlimit">
+		<header/>
+		<body>
+			<trans-unit id="tx_loginlimit_domain_model_loginattempt">
+				<target>Anmelde-Versuch</target>
+			</trans-unit>
+			<trans-unit id="tx_loginlimit_domain_model_ban">
+				<target>Sperre</target>
+			</trans-unit>
+			<trans-unit id="tstamp">
+				<target>Zeit:</target>
+			</trans-unit>
+			<trans-unit id="username">
+				<target>Benutzername:</target>
+			</trans-unit>
+			<trans-unit id="ip">
+				<target>IP:</target>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>
