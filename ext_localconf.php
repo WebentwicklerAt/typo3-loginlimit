@@ -3,7 +3,7 @@ if (!defined('TYPO3_MODE')) {
 	die('Access denied.');
 }
 
-$boot = function ($_EXTKEY) {
+call_user_func(function ($_EXTKEY) {
 	\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addService(
 		$_EXTKEY,
 		'auth',
@@ -27,7 +27,4 @@ $boot = function ($_EXTKEY) {
 	if (TYPO3_MODE === 'BE') {
 		$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['extbase']['commandControllers'][] = 'WebentwicklerAt\\Loginlimit\\Command\\TaskCommandController';
 	}
-};
-
-$boot($_EXTKEY);
-unset($boot);
+}, $_EXTKEY);

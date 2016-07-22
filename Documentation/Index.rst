@@ -30,7 +30,7 @@ scheduler_http
 		forAdmins, forDevelopers, forBeginners
 
 	:Copyright:
-		2015
+		2015-2016
 
 	:Author:
 		Gernot Leitgab
