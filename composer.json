@@ -1,0 +1,28 @@
+{
+    "name": "webentwicklerat/loginlimit",
+    "description": "Protect backend and/or frontend login from brute-force attacks.",
+    "keywords": ["typo3", "login", "frontend", "backend", "brute", "force", "attack"],
+    "homepage": "https://github.com/WebentwicklerAt/typo3-loginlimit",
+    "type": "typo3-cms-extension",
+    "license": "GPL-2.0+",
+    "authors": [
+        {
+            "name": "Gernot Leitgab",
+            "email": "typo3@webentwickler.at",
+            "homepage": "http://webentwickler.at",
+        }
+    ],
+    "require": {
+        "typo3/cms": ">=6.2.0 <=7.6.99",
+        "typo3/cms-scheduler": ">=6.2.0 <=7.6.99"
+    },
+    "replace": {
+        "loginlimit": "self.version",
+        "typo3-ter/loginlimit": "self.version"
+    },
+    "autoload": {
+        "psr-4": {
+            "WebentwicklerAt\\Loginlimit\\": "Classes/"
+        }
+    }
+}
