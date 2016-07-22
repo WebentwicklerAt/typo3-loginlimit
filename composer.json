@@ -9,7 +9,7 @@
         {
             "name": "Gernot Leitgab",
             "email": "typo3@webentwickler.at",
-            "homepage": "http://webentwickler.at",
+            "homepage": "http://webentwickler.at"
         }
     ],
     "require": {
