@@ -19,7 +19,7 @@ use \TYPO3\CMS\Core\Utility\GeneralUtility;
 /**
  * Service avoids authentication after ban
  *
- * @author Gernot Leitgab <typo3@webentwickler.at>
+ * @author Gernot Leitgab <https://webentwickler.at>
  */
 class AuthenticationService extends \TYPO3\CMS\Sv\AbstractAuthenticationService {
 	/**

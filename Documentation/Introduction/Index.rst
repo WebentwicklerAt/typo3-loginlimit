@@ -17,7 +17,7 @@ Introduction
 What does it do?
 ----------------
 
-This extension allows to protect backend and/or frontend login from brute-force attacks.
+This extension allows to protect backend and/or frontend login against brute-force attacks.
 
 If a configured number of failed login attempts with one and the same IP and/or username is reached, further logins are prohibited for this IP and/or username.
 
@@ -27,5 +27,5 @@ If a configured number of failed login attempts with one and the same IP and/or 
 Links
 -----
 
-* Forge: http://forge.typo3.org/projects/show/extension-loginlimit
 * Git-Repository: https://github.com/WebentwicklerAt/typo3-loginlimit
+* Issues: https://github.com/WebentwicklerAt/typo3-loginlimit/issues

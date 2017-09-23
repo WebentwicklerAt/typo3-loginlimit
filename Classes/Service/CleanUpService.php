@@ -17,7 +17,7 @@ namespace WebentwicklerAt\Loginlimit\Service;
 /**
  * Service cleans up expired entries
  *
- * @author Gernot Leitgab <typo3@webentwickler.at>
+ * @author Gernot Leitgab <https://webentwickler.at>
  */
 class CleanUpService implements \TYPO3\CMS\Core\SingletonInterface {
 	/**

@@ -17,7 +17,7 @@ namespace WebentwicklerAt\Loginlimit\Domain\Model;
 /**
  * Model for login attempt
  *
- * @author Gernot Leitgab <typo3@webentwickler.at>
+ * @author Gernot Leitgab <https://webentwickler.at>
  */
 class LoginAttempt extends AbstractModel {
 

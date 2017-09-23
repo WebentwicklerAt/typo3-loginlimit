@@ -17,7 +17,7 @@ namespace WebentwicklerAt\Loginlimit\Domain\Repository;
 /**
  * Repository for \WebentwicklerAt\Loginlimit\Domain\Model\Ban
  *
- * @author Gernot Leitgab <typo3@webentwickler.at>
+ * @author Gernot Leitgab <https://webentwickler.at>
  */
 class BanRepository extends AbstractRepository {
 	/**

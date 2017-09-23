@@ -20,7 +20,7 @@ use \TYPO3\CMS\Core\Utility\GeneralUtility;
  * Post user look-up hook for \TYPO3\CMS\Core\Authentication\AbstractUserAuthentication
  * to handle logging of login attempts and bans
  *
- * @author Gernot Leitgab <typo3@webentwickler.at>
+ * @author Gernot Leitgab <https://webentwickler.at>
  */
 class UserAuthentication {
 	/**

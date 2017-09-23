@@ -17,7 +17,7 @@ namespace WebentwicklerAt\Loginlimit\Command;
 /**
  * Extbase CommandController Task
  *
- * @author Gernot Leitgab <typo3@webentwickler.at>
+ * @author Gernot Leitgab <https://webentwickler.at>
  */
 class TaskCommandController extends \TYPO3\CMS\Extbase\Mvc\Controller\CommandController {
 	/**

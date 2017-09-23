@@ -19,7 +19,7 @@ use \TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 /**
  * User functions for rendering title of records
  *
- * @author Gernot Leitgab <typo3@webentwickler.at>
+ * @author Gernot Leitgab <https://webentwickler.at>
  */
 class Tca {
 	/**

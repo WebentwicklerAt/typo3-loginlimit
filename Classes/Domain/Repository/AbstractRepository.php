@@ -17,7 +17,7 @@ namespace WebentwicklerAt\Loginlimit\Domain\Repository;
 /**
  * Abstract repository
  *
- * @author Gernot Leitgab <typo3@webentwickler.at>
+ * @author Gernot Leitgab <https://webentwickler.at>
  */
 abstract class AbstractRepository extends \TYPO3\CMS\Extbase\Persistence\Repository {
 	/**

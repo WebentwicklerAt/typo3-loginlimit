@@ -1,6 +1,6 @@
 {
     "name": "webentwicklerat/loginlimit",
-    "description": "Protect backend and/or frontend login from brute-force attacks.",
+    "description": "Protect backend and/or frontend login against brute-force attacks.",
     "keywords": ["typo3", "login", "frontend", "backend", "brute", "force", "attack"],
     "homepage": "https://github.com/WebentwicklerAt/typo3-loginlimit",
     "type": "typo3-cms-extension",
@@ -8,8 +8,7 @@
     "authors": [
         {
             "name": "Gernot Leitgab",
-            "email": "typo3@webentwickler.at",
-            "homepage": "http://webentwickler.at"
+            "homepage": "https://webentwickler.at"
         }
     ],
     "require": {

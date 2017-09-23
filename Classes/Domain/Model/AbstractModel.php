@@ -17,7 +17,7 @@ namespace WebentwicklerAt\Loginlimit\Domain\Model;
 /**
  * Abstract model
  *
- * @author Gernot Leitgab <typo3@webentwickler.at>
+ * @author Gernot Leitgab <https://webentwickler.at>
  */
 abstract class AbstractModel extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 	/**
