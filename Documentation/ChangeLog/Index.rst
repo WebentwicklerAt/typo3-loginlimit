@@ -11,6 +11,12 @@
 ChangeLog
 =========
 
+loginlimit 1.0.3, 2017-09-23
+----------------------------
+- Update documentation.
+- Add LICENSE file.
+- Compatibility with TYPO3 8.7.
+
 loginlimit 1.0.2, 2016-07-22
 ----------------------------
 - Removed superfluous comma in composer.json.
