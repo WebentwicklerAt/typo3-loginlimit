@@ -11,10 +11,10 @@ enableCleanUpAtLogin = 1
 delayLogin = 1
 
 # cat=basic; type=integer; label=Max allowed retries: Number of failed login attempts within findtime causing a ban for bantime.
-maxretry = 5
+maxRetry = 5
 
 # cat=basic; type=integer; label=Find time: Time frame (in seconds) to look for failed login attempts.
-findtime = 600
+findTime = 600
 
 # cat=basic; type=integer; label=Ban time: Duration (in seconds) to be banned for. Negative number for "permanent" ban.
-bantime = 3600
+banTime = 3600
