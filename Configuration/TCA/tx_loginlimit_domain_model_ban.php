@@ -1,6 +1,7 @@
 <?php
-return array(
-	'ctrl' => array(
+
+return [
+	'ctrl' => [
 		'title' => 'LLL:EXT:loginlimit/Resources/Private/Language/locallang.xlf:tx_loginlimit_domain_model_ban',
 		'label' => 'tstamp',
 		'label_userFunc' => 'WebentwicklerAt\\Loginlimit\\Userfuncs\\Tca->banTitle',
@@ -8,43 +9,43 @@ return array(
 		'default_sortby' => 'tstamp DESC',
 		'tstamp' => 'tstamp',
 		'rootLevel' => 1,
-		'dividers2tabs' => TRUE,
-		'adminOnly' => TRUE,
+		'dividers2tabs' => true,
+		'adminOnly' => true,
 		'searchFields' => 'ip,username'
-	),
-	'interface' => array(
+	],
+	'interface' => [
 		'showRecordFieldList' => 'tstamp,username,ip'
-	),
-	'columns' => array(
-		'tstamp' => array(
+	],
+	'columns' => [
+		'tstamp' => [
 			'label' => 'LLL:EXT:loginlimit/Resources/Private/Language/locallang.xlf:tstamp',
-			'config' => array(
+			'config' => [
 				'type' => 'input',
 				'size' => '13',
 				'eval' => 'datetime',
-				'readOnly' => TRUE
-			)
-		),
-		'ip' => array(
+				'readOnly' => true
+			]
+		],
+		'ip' => [
 			'label' => 'LLL:EXT:loginlimit/Resources/Private/Language/locallang.xlf:ip',
-			'config' => array(
+			'config' => [
 				'type' => 'input',
 				'size' => '20',
-				'readOnly' => TRUE
-			)
-		),
-		'username' => array(
+				'readOnly' => true
+			]
+		],
+		'username' => [
 			'label' => 'LLL:EXT:loginlimit/Resources/Private/Language/locallang.xlf:username',
-			'config' => array(
+			'config' => [
 				'type' => 'input',
 				'size' => '20',
-				'readOnly' => TRUE
-			)
-		)
-	),
-	'types' => array(
-		'0' => array(
+				'readOnly' => true
+			]
+		]
+	],
+	'types' => [
+		'0' => [
 			'showitem' => 'tstamp,ip,username'
-		)
-	)
-);
+		]
+	],
+];

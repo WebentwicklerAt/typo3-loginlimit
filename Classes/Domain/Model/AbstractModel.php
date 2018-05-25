@@ -14,83 +14,93 @@ namespace WebentwicklerAt\Loginlimit\Domain\Model;
  * The TYPO3 project - inspiring people to share!
  */
 
+use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
+
 /**
  * Abstract model
  *
  * @author Gernot Leitgab <https://webentwickler.at>
  */
-abstract class AbstractModel extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
+abstract class AbstractModel extends AbstractEntity
+{
+    /**
+     * Timestamp
+     *
+     * @var \DateTime
+     */
+    protected $tstamp;
+
+    /**
+     * IP
+     *
+     * @var string
+     */
+    protected $ip;
+
+    /**
+     * Username
+     *
+     * @var string
+     */
+    protected $username;
+
 	/**
 	 * Constructor
 	 *
 	 */
-	public function __construct() {
+	public function __construct()
+    {
 		$this->pid = 0;
 	}
-
-	/**
-	 * Timestamp
-	 *
-	 * @var \DateTime
-	 */
-	protected $tstamp;
 
 	/**
 	 * @param \DateTime $tstamp
 	 * @return void
 	 */
-	public function setTstamp($tstamp) {
+	public function setTstamp($tstamp)
+    {
 		$this->tstamp = $tstamp;
 	}
 
 	/**
 	 * @return \DateTime
 	 */
-	public function getTstamp() {
+	public function getTstamp()
+    {
 		return $this->tstamp;
 	}
-
-	/**
-	 * IP
-	 *
-	 * @var string
-	 */
-	protected $ip;
 
 	/**
 	 * @param string $ip
 	 * @return void
 	 */
-	public function setIp($ip) {
+	public function setIp($ip)
+    {
 		$this->ip = $ip;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getIp() {
+	public function getIp()
+    {
 		return $this->ip;
 	}
-
-	/**
-	 * Username
-	 *
-	 * @var string
-	 */
-	protected $username;
 
 	/**
 	 * @param string $username
 	 * @return void
 	 */
-	public function setUsername($username) {
+	public function setUsername($username)
+    {
 		$this->username = $username;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function getUsername() {
+	public function getUsername()
+    {
 		return $this->username;
 	}
 }

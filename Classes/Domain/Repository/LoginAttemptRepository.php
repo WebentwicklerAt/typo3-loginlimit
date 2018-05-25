@@ -19,7 +19,8 @@ namespace WebentwicklerAt\Loginlimit\Domain\Repository;
  *
  * @author Gernot Leitgab <https://webentwickler.at>
  */
-class LoginAttemptRepository extends AbstractRepository {
+class LoginAttemptRepository extends AbstractRepository
+{
 	/**
 	 * Counts active (not expired) login attempts based on IP
 	 *
@@ -27,7 +28,8 @@ class LoginAttemptRepository extends AbstractRepository {
 	 * @param integer $findtime
 	 * @return integer
 	 */
-	public function countLoginAttemptsByIp($ip, $findtime) {
+	public function countLoginAttemptsByIp($ip, $findtime)
+    {
 		$query = $this->createQuery();
 
 		$constraints = $query->logicalAnd(
@@ -44,7 +46,8 @@ class LoginAttemptRepository extends AbstractRepository {
 	 * @param string $username
 	 * @return integer
 	 */
-	public function countLoginAttemptsByUsername($username, $findtime) {
+	public function countLoginAttemptsByUsername($username, $findtime)
+    {
 		$query = $this->createQuery();
 
 		$constraints = $query->logicalAnd(
@@ -61,7 +64,8 @@ class LoginAttemptRepository extends AbstractRepository {
 	 * @param integer $findtime
 	 * @return array|\TYPO3\CMS\Extbase\Persistence\QueryResultInterface
 	 */
-	public function findExpired($findtime) {
+	public function findExpired($findtime)
+    {
 		$query = $this->createQuery();
 
 		$constraints = $query->lessThan('tstamp', $GLOBALS['EXEC_TIME'] - (int)$findtime);
