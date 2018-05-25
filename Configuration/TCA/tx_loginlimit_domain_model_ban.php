@@ -5,7 +5,7 @@ return [
 		'title' => 'LLL:EXT:loginlimit/Resources/Private/Language/locallang.xlf:tx_loginlimit_domain_model_ban',
 		'label' => 'tstamp',
 		'label_userFunc' => 'WebentwicklerAt\\Loginlimit\\Userfuncs\\Tca->banTitle',
-		'iconfile' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath('loginlimit') . 'Resources/Public/Icons/tx_loginlimit_domain_model_ban.png',
+		'iconfile' => 'EXT:loginlimit/Resources/Public/Icons/tx_loginlimit_domain_model_ban.png',
 		'default_sortby' => 'tstamp DESC',
 		'tstamp' => 'tstamp',
 		'rootLevel' => 1,
