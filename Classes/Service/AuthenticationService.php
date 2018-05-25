@@ -159,22 +159,7 @@ class AuthenticationService extends AbstractAuthenticationService
 
 		return false;
 	}
-
-	/**
-	 * Helper to get login attempt repository
-	 * Only instantiate object if required
-	 *
-	 * @return \WebentwicklerAt\Loginlimit\Domain\Repository\LoginAttemptRepository
-	 */
-	protected function getLoginAttemptRepository()
-    {
-		if (!isset($this->loginAttemptRepository)) {
-			$this->loginAttemptRepository = $this->objectManager->get(LoginAttemptRepository::class);
-		}
-
-		return $this->loginAttemptRepository;
-	}
-
+	
 	/**
 	 * Helper to get ban repository
 	 * Only instantiate object if required
