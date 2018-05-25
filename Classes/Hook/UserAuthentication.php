@@ -73,6 +73,9 @@ class UserAuthentication
     {
 		$this->objectManager = GeneralUtility::makeInstance(ObjectManager::class);
 		$this->settings = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('loginlimit');
+        $this->persistenceManager = $this->objectManager->get(PersistenceManagerInterface::class);
+        $this->loginAttemptRepository = $this->objectManager->get(LoginAttemptRepository::class);
+        $this->banRepository = $this->objectManager->get(BanRepository::class);
 	}
 
 	/**
@@ -89,17 +92,17 @@ class UserAuthentication
 			$username = $loginData['uname'];
 			$this->logLoginAttempt($ip, $username);
 
-			$loginAttempts = $this->getLoginAttemptRepository()->countLoginAttemptsByIp($ip, $this->settings['findTime']['value']);
-			if ($loginAttempts >= $this->settings['maxRetry']['value']) {
+			$loginAttempts = $this->loginAttemptRepository->countLoginAttemptsByIp($ip, $this->settings['findTime']);
+			if ($loginAttempts >= (int)$this->settings['maxRetry']) {
 				$this->ban($ip, '');
 			}
 
-			$loginAttempts = $this->getLoginAttemptRepository()->countLoginAttemptsByUsername($username, $this->settings['findTime']['value']);
-			if ($loginAttempts >= $this->settings['maxRetry']['value']) {
+			$loginAttempts = $this->loginAttemptRepository->countLoginAttemptsByUsername($username, $this->settings['findTime']);
+			if ($loginAttempts >= (int)$this->settings['maxRetry']) {
 				$this->ban('', $username);
 			}
 
-			if ($this->settings['delayLogin']['value']) {
+			if ($this->settings['delayLogin']) {
 				sleep(min($loginAttempts, 10));
 			}
 		}
@@ -114,8 +117,8 @@ class UserAuthentication
 	protected function isLoginlimitActive(&$params)
     {
 		if ($params['pObj']->loginFailure &&
-			($params['pObj']->loginType === 'FE' && $this->settings['enableFrontend']['value'] ||
-				$params['pObj']->loginType === 'BE' && $this->settings['enableBackend']['value'])
+			($params['pObj']->loginType === 'FE' && $this->settings['enableFrontend'] ||
+				$params['pObj']->loginType === 'BE' && $this->settings['enableBackend'])
 		) {
 			return true;
 		}
@@ -136,8 +139,8 @@ class UserAuthentication
 		$loginAttempt->setIp($ip);
 		$loginAttempt->setUsername($username);
 
-		$this->getLoginAttemptRepository()->add($loginAttempt);
-		$this->getPersistenceManager()->persistAll();
+        $this->loginAttemptRepository->add($loginAttempt);
+        $this->persistenceManager->persistAll();
 	}
 
 	/**
@@ -149,63 +152,17 @@ class UserAuthentication
 	 */
 	protected function ban($ip, $username)
     {
-		$ban = $this->getBanRepository()->findBan($ip, $username);
+		$ban = $this->banRepository->findBan($ip, $username);
 		if ($ban === null) {
 			$ban = $this->objectManager->get(Ban::class);
 			$ban->setIp($ip);
 			$ban->setUsername($username);
-
-			$this->getBanRepository()->add($ban);
+            $this->banRepository->add($ban);
 		} else {
 			$ban->setTstamp(new \DateTime('@' . $GLOBALS['EXEC_TIME']));
-			$this->getBanRepository()->update($ban);
+            $this->banRepository->update($ban);
 		}
 
-		$this->getPersistenceManager()->persistAll();
-	}
-
-	/**
-	 * Helper to get persistence manager
-	 * Only instantiate if required
-	 *
-	 * @return \TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface
-	 */
-	protected function getPersistenceManager()
-    {
-		if (!isset($this->persistenceManager)) {
-			$this->persistenceManager = $this->objectManager->get(PersistenceManagerInterface::class);
-		}
-
-		return $this->persistenceManager;
-	}
-
-	/**
-	 * Helper to get login attempt repository
-	 * Only instantiate object if required
-	 *
-	 * @return \WebentwicklerAt\Loginlimit\Domain\Repository\LoginAttemptRepository
-	 */
-	protected function getLoginAttemptRepository()
-    {
-		if (!isset($this->loginAttemptRepository)) {
-			$this->loginAttemptRepository = $this->objectManager->get(LoginAttemptRepository::class);
-		}
-
-		return $this->loginAttemptRepository;
-	}
-
-	/**
-	 * Helper to get ban repository
-	 * Only instantiate object if required
-	 *
-	 * @return \WebentwicklerAt\Loginlimit\Domain\Repository\BanRepository
-	 */
-	protected function getBanRepository()
-    {
-		if (!isset($this->banRepository)) {
-			$this->banRepository = $this->objectManager->get(BanRepository::class);
-		}
-
-		return $this->banRepository;
+        $this->persistenceManager->persistAll();
 	}
 }
