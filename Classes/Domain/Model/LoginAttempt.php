@@ -19,6 +19,7 @@ namespace WebentwicklerAt\Loginlimit\Domain\Model;
  *
  * @author Gernot Leitgab <https://webentwickler.at>
  */
-class LoginAttempt extends AbstractModel {
+class LoginAttempt extends AbstractModel
+{
 
 }

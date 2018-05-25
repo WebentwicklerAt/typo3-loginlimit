@@ -19,7 +19,8 @@ namespace WebentwicklerAt\Loginlimit\Domain\Repository;
  *
  * @author Gernot Leitgab <https://webentwickler.at>
  */
-class BanRepository extends AbstractRepository {
+class BanRepository extends AbstractRepository
+{
 	/**
 	 * Finds first ban based on IP or username
 	 *
@@ -27,7 +28,8 @@ class BanRepository extends AbstractRepository {
 	 * @param string $username
 	 * @return object
 	 */
-	public function findBan($ip, $username) {
+	public function findBan($ip, $username)
+    {
 		$query = $this->createQuery();
 
 		$constraints = $query->logicalOr(
@@ -47,7 +49,8 @@ class BanRepository extends AbstractRepository {
 	 * @param integer $bantime
 	 * @return object
 	 */
-	public function findActiveBan($ip, $username, $bantime) {
+	public function findActiveBan($ip, $username, $bantime)
+    {
 		$query = $this->createQuery();
 
 		$constraints = $query->logicalOr(
@@ -71,15 +74,17 @@ class BanRepository extends AbstractRepository {
 	 * @param integer $bantime
 	 * @return array|\TYPO3\CMS\Extbase\Persistence\QueryResultInterface
 	 */
-	public function findExpired($bantime) {
+	public function findExpired($bantime)
+    {
+        $result = [];
 		if ($bantime >= 0) {
 			$query = $this->createQuery();
 
 			$constraints = $query->lessThan('tstamp', $GLOBALS['EXEC_TIME'] - (int)$bantime);
 
-			return $query->matching($constraints)->execute();
+            $result = $query->matching($constraints)->execute();
 		}
 
-		return array();
+		return $result;
 	}
 }

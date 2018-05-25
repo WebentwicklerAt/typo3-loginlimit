@@ -14,18 +14,55 @@ namespace WebentwicklerAt\Loginlimit\Service;
  * The TYPO3 project - inspiring people to share!
  */
 
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\SingletonInterface;
+use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
+use TYPO3\CMS\Extbase\Object\ObjectManagerInterface;
+use TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface;
+use WebentwicklerAt\Loginlimit\Domain\Repository\BanRepository;
+use WebentwicklerAt\Loginlimit\Domain\Repository\LoginAttemptRepository;
+
 /**
  * Service cleans up expired entries
  *
  * @author Gernot Leitgab <https://webentwickler.at>
  */
-class CleanUpService implements \TYPO3\CMS\Core\SingletonInterface {
-	/**
-	 * Object manager
-	 *
-	 * @var \TYPO3\CMS\Extbase\Object\ObjectManagerInterface
-	 */
-	protected $objectManager;
+class CleanUpService implements SingletonInterface
+{
+    /**
+     * Object manager
+     *
+     * @var \TYPO3\CMS\Extbase\Object\ObjectManagerInterface
+     */
+    protected $objectManager;
+
+    /**
+     * Extension manager settings
+     *
+     * @var array
+     */
+    protected $settings;
+
+    /**
+     * Persistence manager
+     *
+     * @var \TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface
+     */
+    protected $persistenceManager;
+
+    /**
+     * Repository for login attempt
+     *
+     * @var \WebentwicklerAt\Loginlimit\Domain\Repository\LoginAttemptRepository
+     */
+    protected $loginAttemptRepository;
+
+    /**
+     * Repository for ban
+     *
+     * @var \WebentwicklerAt\Loginlimit\Domain\Repository\BanRepository
+     */
+    protected $banRepository;
 
 	/**
 	 * Injects object manager
@@ -33,16 +70,10 @@ class CleanUpService implements \TYPO3\CMS\Core\SingletonInterface {
 	 * @param \TYPO3\CMS\Extbase\Object\ObjectManagerInterface $objectManager
 	 * @return void
 	 */
-	public function injectObjectManager(\TYPO3\CMS\Extbase\Object\ObjectManagerInterface $objectManager) {
+	public function injectObjectManager(ObjectManagerInterface $objectManager)
+    {
 		$this->objectManager = $objectManager;
 	}
-
-	/**
-	 * Persistence manager
-	 *
-	 * @var \TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface
-	 */
-	protected $persistenceManager;
 
 	/**
 	 * Injects persistence manager
@@ -50,16 +81,10 @@ class CleanUpService implements \TYPO3\CMS\Core\SingletonInterface {
 	 * @param \TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface $persistenceManager
 	 * @return void
 	 */
-	public function injectPersistenceManager(\TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface $persistenceManager) {
+	public function injectPersistenceManager(PersistenceManagerInterface $persistenceManager)
+    {
 		$this->persistenceManager = $persistenceManager;
 	}
-
-	/**
-	 * Repository for login attempt
-	 *
-	 * @var \WebentwicklerAt\Loginlimit\Domain\Repository\LoginAttemptRepository
-	 */
-	protected $loginAttemptRepository;
 
 	/**
 	 * Injects repository for login attempt
@@ -67,16 +92,10 @@ class CleanUpService implements \TYPO3\CMS\Core\SingletonInterface {
 	 * @param \WebentwicklerAt\Loginlimit\Domain\Repository\LoginAttemptRepository $loginAttemptRepository
 	 * @return void
 	 */
-	public function injectLoginAttemptRepository(\WebentwicklerAt\Loginlimit\Domain\Repository\LoginAttemptRepository $loginAttemptRepository) {
+	public function injectLoginAttemptRepository(LoginAttemptRepository $loginAttemptRepository)
+    {
 		$this->loginAttemptRepository = $loginAttemptRepository;
 	}
-
-	/**
-	 * Repository for ban
-	 *
-	 * @var \WebentwicklerAt\Loginlimit\Domain\Repository\BanRepository
-	 */
-	protected $banRepository;
 
 	/**
 	 * Injects repository for ban
@@ -84,25 +103,19 @@ class CleanUpService implements \TYPO3\CMS\Core\SingletonInterface {
 	 * @param \WebentwicklerAt\Loginlimit\Domain\Repository\BanRepository $banRepository
 	 * @return void
 	 */
-	public function injectBanRepository(\WebentwicklerAt\Loginlimit\Domain\Repository\BanRepository $banRepository) {
+	public function injectBanRepository(BanRepository $banRepository)
+    {
 		$this->banRepository = $banRepository;
 	}
-
-	/**
-	 * Extension manager settings
-	 *
-	 * @var array
-	 */
-	protected $settings;
 
 	/**
 	 * Initializes object
 	 *
 	 * @return void
 	 */
-	public function initializeObject() {
-		$configurationUtility = $this->objectManager->get('TYPO3\\CMS\\Extensionmanager\\Utility\\ConfigurationUtility');
-		$this->settings = $configurationUtility->getCurrentConfiguration('loginlimit');
+	public function initializeObject()
+    {
+		$this->settings = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('loginlimit');
 	}
 
 	/**
@@ -110,7 +123,8 @@ class CleanUpService implements \TYPO3\CMS\Core\SingletonInterface {
 	 *
 	 * @return void
 	 */
-	public function deleteExpiredEntries() {
+	public function deleteExpiredEntries()
+    {
 		$this->deleteExpiredLoginAttempts();
 		$this->deleteExpiredBans();
 		$this->persistenceManager->persistAll();
@@ -121,8 +135,9 @@ class CleanUpService implements \TYPO3\CMS\Core\SingletonInterface {
 	 *
 	 * @return void
 	 */
-	protected function deleteExpiredLoginAttempts() {
-		$findtime = $this->settings['findtime']['value'];
+	protected function deleteExpiredLoginAttempts()
+    {
+		$findtime = $this->settings['findTime']['value'];
 		$expiredEntries = $this->loginAttemptRepository->findExpired($findtime);
 		foreach ($expiredEntries as $expiredEntry) {
 			$this->loginAttemptRepository->remove($expiredEntry);
@@ -134,8 +149,9 @@ class CleanUpService implements \TYPO3\CMS\Core\SingletonInterface {
 	 *
 	 * @return void
 	 */
-	protected function deleteExpiredBans() {
-		$bantime = $this->settings['bantime']['value'];
+	protected function deleteExpiredBans()
+    {
+		$bantime = $this->settings['banTime']['value'];
 		if ($bantime >= 0) {
 			$expiredEntries = $this->banRepository->findExpired($bantime);
 			foreach ($expiredEntries as $expiredEntry) {

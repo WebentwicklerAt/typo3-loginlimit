@@ -14,14 +14,22 @@ namespace WebentwicklerAt\Loginlimit\Service;
  * The TYPO3 project - inspiring people to share!
  */
 
-use \TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
+use TYPO3\CMS\Sv\AbstractAuthenticationService;
+use TYPO3\CMS\Frontend\Page\PageRepository;
+use WebentwicklerAt\Loginlimit\Domain\Repository\LoginAttemptRepository;
+use WebentwicklerAt\Loginlimit\Domain\Repository\BanRepository;
 
 /**
  * Service avoids authentication after ban
  *
  * @author Gernot Leitgab <https://webentwickler.at>
  */
-class AuthenticationService extends \TYPO3\CMS\Sv\AbstractAuthenticationService {
+class AuthenticationService extends AbstractAuthenticationService
+{
 	/**
 	 * Object manager
 	 *
@@ -56,27 +64,27 @@ class AuthenticationService extends \TYPO3\CMS\Sv\AbstractAuthenticationService 
 	 *
 	 * @return boolean
 	 */
-	public function init() {
+	public function init()
+    {
 		// in frontend TCA is not loaded
 		if (TYPO3_MODE === 'FE') {
-			if ($GLOBALS['TCA'] === NULL) {
-				\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::loadBaseTca(FALSE);
+			if ($GLOBALS['TCA'] === null) {
+				ExtensionManagementUtility::loadBaseTca(false);
 			}
-			if (!$GLOBALS['TSFE']->sys_page instanceof \TYPO3\CMS\Frontend\Page\PageRepository) {
-				$GLOBALS['TSFE']->sys_page = GeneralUtility::makeInstance('TYPO3\\CMS\\Frontend\\Page\\PageRepository');
+			if (!$GLOBALS['TSFE']->sys_page instanceof PageRepository) {
+				$GLOBALS['TSFE']->sys_page = GeneralUtility::makeInstance(PageRepository::class);
 			}
 		}
 
-		$this->objectManager = GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Object\\ObjectManager');
-		$configurationUtility = $this->objectManager->get('TYPO3\\CMS\\Extensionmanager\\Utility\\ConfigurationUtility');
-		$this->settings = $configurationUtility->getCurrentConfiguration('loginlimit');
+		$this->objectManager = GeneralUtility::makeInstance(ObjectManager::class);
+		$this->settings = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('loginlimit');
 
 		if ($this->settings['enableCleanUpAtLogin']['value']) {
-			$cleanUpService = $this->objectManager->get('WebentwicklerAt\\Loginlimit\\Service\\CleanUpService');
+			$cleanUpService = $this->objectManager->get(CleanUpService::class);
 			$cleanUpService->deleteExpiredEntries();
 		}
 
-		return TRUE;
+		return true;
 	}
 
 	/**
@@ -84,13 +92,14 @@ class AuthenticationService extends \TYPO3\CMS\Sv\AbstractAuthenticationService 
 	 *
 	 * @return mixed User array or FALSE
 	 */
-	public function getUser() {
+	public function getUser()
+    {
 		if ($this->isLoginlimitActive() && $this->isBanned()) {
-			$GLOBALS['TYPO3_CONF_VARS']['SVCONF']['auth']['setup'][$this->authInfo['loginType'] . '_alwaysAuthUser'] = FALSE;
-			return array('uid' => 0);
+			$GLOBALS['TYPO3_CONF_VARS']['SVCONF']['auth']['setup'][$this->authInfo['loginType'] . '_alwaysAuthUser'] = false;
+			return ['uid' => 0];
 		}
 
-		return FALSE;
+		return false;
 	}
 
 	/**
@@ -106,14 +115,15 @@ class AuthenticationService extends \TYPO3\CMS\Sv\AbstractAuthenticationService 
 	 *                 <= 0:   Authentication failed, no more checking needed
 	 *                         by other auth services.
 	 */
-	public function authUser(array $user) {
-		$OK = 100;
+	public function authUser(array $user)
+    {
+		$ok = 100;
 
 		if ($this->isLoginlimitActive() && $this->isBanned()) {
-			$OK = -1;
+            $ok = -1;
 		}
 
-		return $OK;
+		return $ok;
 	}
 
 	/**
@@ -121,14 +131,15 @@ class AuthenticationService extends \TYPO3\CMS\Sv\AbstractAuthenticationService 
 	 *
 	 * @return boolean
 	 */
-	protected function isLoginlimitActive() {
+	protected function isLoginlimitActive()
+    {
 		if (($this->authInfo['loginType'] === 'FE' && $this->settings['enableFrontend']['value'] ||
 			$this->authInfo['loginType'] === 'BE' && $this->settings['enableBackend']['value'])
 		) {
-			return TRUE;
+			return true;
 		}
 
-		return FALSE;
+		return false;
 	}
 
 	/**
@@ -136,15 +147,16 @@ class AuthenticationService extends \TYPO3\CMS\Sv\AbstractAuthenticationService 
 	 *
 	 * @return boolean
 	 */
-	protected function isBanned() {
+	protected function isBanned()
+    {
 		$ip = GeneralUtility::getIndpEnv('REMOTE_ADDR');
 		$username = $this->login['uname'];
 
-		if ($this->getBanRepository()->findActiveBan($ip, $username, $this->settings['bantime']['value'])) {
-			return TRUE;
+		if ($this->getBanRepository()->findActiveBan($ip, $username, $this->settings['banTime']['value'])) {
+			return true;
 		}
 
-		return FALSE;
+		return false;
 	}
 
 	/**
@@ -153,9 +165,10 @@ class AuthenticationService extends \TYPO3\CMS\Sv\AbstractAuthenticationService 
 	 *
 	 * @return \WebentwicklerAt\Loginlimit\Domain\Repository\LoginAttemptRepository
 	 */
-	protected function getLoginAttemptRepository() {
+	protected function getLoginAttemptRepository()
+    {
 		if (!isset($this->loginAttemptRepository)) {
-			$this->loginAttemptRepository = $this->objectManager->get('WebentwicklerAt\\Loginlimit\\Domain\\Repository\\LoginAttemptRepository');
+			$this->loginAttemptRepository = $this->objectManager->get(LoginAttemptRepository::class);
 		}
 
 		return $this->loginAttemptRepository;
@@ -167,9 +180,10 @@ class AuthenticationService extends \TYPO3\CMS\Sv\AbstractAuthenticationService 
 	 *
 	 * @return \WebentwicklerAt\Loginlimit\Domain\Repository\BanRepository
 	 */
-	protected function getBanRepository() {
+	protected function getBanRepository()
+    {
 		if (!isset($this->banRepository)) {
-			$this->banRepository = $this->objectManager->get('WebentwicklerAt\\Loginlimit\\Domain\\Repository\\BanRepository');
+			$this->banRepository = $this->objectManager->get(BanRepository::class);
 		}
 
 		return $this->banRepository;

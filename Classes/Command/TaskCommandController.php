@@ -14,12 +14,16 @@ namespace WebentwicklerAt\Loginlimit\Command;
  * The TYPO3 project - inspiring people to share!
  */
 
+use TYPO3\CMS\Extbase\Mvc\Controller\CommandController;
+use WebentwicklerAt\Loginlimit\Service\CleanUpService;
+
 /**
  * Extbase CommandController Task
  *
  * @author Gernot Leitgab <https://webentwickler.at>
  */
-class TaskCommandController extends \TYPO3\CMS\Extbase\Mvc\Controller\CommandController {
+class TaskCommandController extends CommandController
+{
 	/**
 	 * Clean up expired entries
 	 *
@@ -27,8 +31,9 @@ class TaskCommandController extends \TYPO3\CMS\Extbase\Mvc\Controller\CommandCon
 	 *
 	 * @return void
 	 */
-	public function cleanUpCommand() {
-		$service = $this->objectManager->get('WebentwicklerAt\\Loginlimit\\Service\\CleanUpService');
+	public function cleanUpCommand()
+    {
+		$service = $this->objectManager->get(CleanUpService::class);
 		$service->deleteExpiredEntries();
 	}
 }

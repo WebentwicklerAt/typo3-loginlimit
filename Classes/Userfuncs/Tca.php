@@ -14,14 +14,15 @@ namespace WebentwicklerAt\Loginlimit\Userfuncs;
  * The TYPO3 project - inspiring people to share!
  */
 
-use \TYPO3\CMS\Extbase\Utility\LocalizationUtility;
+use TYPO3\CMS\Backend\Utility\BackendUtility;
 
 /**
  * User functions for rendering title of records
  *
  * @author Gernot Leitgab <https://webentwickler.at>
  */
-class Tca {
+class Tca
+{
 	/**
 	 * Title for login attempt table
 	 *
@@ -29,7 +30,8 @@ class Tca {
 	 * @param mixed $parentObject
 	 * @return void
 	 */
-	public function loginAttemptTitle(&$parameters, $parentObject) {
+	public function loginAttemptTitle(&$parameters, $parentObject)
+    {
 		$this->getTitle($parameters);
 	}
 
@@ -40,7 +42,8 @@ class Tca {
 	 * @param mixed $parentObject
 	 * @return void
 	 */
-	public function banTitle(&$parameters, $parentObject) {
+	public function banTitle(&$parameters, $parentObject)
+    {
 		$this->getTitle($parameters);
 	}
 
@@ -50,10 +53,11 @@ class Tca {
 	 * @param array $parameters
 	 * @return void
 	 */
-	protected function getTitle(&$parameters) {
-		$record = \TYPO3\CMS\Backend\Utility\BackendUtility::getRecord($parameters['table'], $parameters['row']['uid']);
+	protected function getTitle(&$parameters)
+    {
+		$record = BackendUtility::getRecord($parameters['table'], $parameters['row']['uid']);
 
-		$title = array();
+		$title = [];
 		$title[] = date(
 			$GLOBALS['TYPO3_CONF_VARS']['SYS']['ddmmyy'] . ' ' . $GLOBALS['TYPO3_CONF_VARS']['SYS']['hhmm'],
 			$record['tstamp']
