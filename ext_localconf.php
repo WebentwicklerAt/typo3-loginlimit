@@ -23,7 +23,7 @@ call_user_func(function ($_EXTKEY) {
 	);
 
 	$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_userauth.php']['postUserLookUp'][$_EXTKEY]
-        = 'EXT:' . $_EXTKEY . '/Classes/Hook/UserAuthentication.php:WebentwicklerAt\\Loginlimit\\Hook\\UserAuthentication->postUserLookUp';
+        = \WebentwicklerAt\Loginlimit\Hook\UserAuthentication::class . '->postUserLookUp';
 
 	if (TYPO3_MODE === 'BE') {
 		$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['extbase']['commandControllers'][] = \WebentwicklerAt\Loginlimit\Command\TaskCommandController::class;
