@@ -1,4 +1,5 @@
 <?php
+defined('TYPO3_MODE') or die();
 
 return [
     'ctrl' => [
@@ -20,6 +21,7 @@ return [
         'tstamp' => [
             'label' => 'LLL:EXT:loginlimit/Resources/Private/Language/locallang.xlf:tstamp',
             'config' => [
+                'renderType' => 'inputDateTime',
                 'type' => 'input',
                 'size' => '13',
                 'eval' => 'datetime',
