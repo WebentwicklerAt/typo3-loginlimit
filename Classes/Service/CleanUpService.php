@@ -15,7 +15,6 @@ namespace WebentwicklerAt\Loginlimit\Service;
  */
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Extbase\Object\ObjectManagerInterface;
 use TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface;
@@ -27,7 +26,7 @@ use WebentwicklerAt\Loginlimit\Domain\Repository\LoginAttemptRepository;
  *
  * @author Gernot Leitgab <https://webentwickler.at>
  */
-class CleanUpService implements SingletonInterface
+class CleanUpService
 {
     /**
      * Object manager
