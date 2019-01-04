@@ -24,16 +24,16 @@ use WebentwicklerAt\Loginlimit\Service\CleanUpService;
  */
 class TaskCommandController extends CommandController
 {
-	/**
-	 * Clean up expired entries
-	 *
-	 * Deletes expired login attempts and bans.
-	 *
-	 * @return void
-	 */
-	public function cleanUpCommand()
+    /**
+     * Clean up expired entries
+     *
+     * Deletes expired login attempts and bans.
+     *
+     * @return void
+     */
+    public function cleanUpCommand()
     {
-		$service = $this->objectManager->get(CleanUpService::class);
-		$service->deleteExpiredEntries();
-	}
+        $service = $this->objectManager->get(CleanUpService::class);
+        $service->deleteExpiredEntries();
+    }
 }

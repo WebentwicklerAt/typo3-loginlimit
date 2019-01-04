@@ -21,5 +21,4 @@ namespace WebentwicklerAt\Loginlimit\Domain\Model;
  */
 class Ban extends AbstractModel
 {
-
 }

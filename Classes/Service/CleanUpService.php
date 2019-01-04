@@ -64,99 +64,99 @@ class CleanUpService implements SingletonInterface
      */
     protected $banRepository;
 
-	/**
-	 * Injects object manager
-	 *
-	 * @param \TYPO3\CMS\Extbase\Object\ObjectManagerInterface $objectManager
-	 * @return void
-	 */
-	public function injectObjectManager(ObjectManagerInterface $objectManager)
+    /**
+     * Injects object manager
+     *
+     * @param \TYPO3\CMS\Extbase\Object\ObjectManagerInterface $objectManager
+     * @return void
+     */
+    public function injectObjectManager(ObjectManagerInterface $objectManager)
     {
-		$this->objectManager = $objectManager;
-	}
+        $this->objectManager = $objectManager;
+    }
 
-	/**
-	 * Injects persistence manager
-	 *
-	 * @param \TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface $persistenceManager
-	 * @return void
-	 */
-	public function injectPersistenceManager(PersistenceManagerInterface $persistenceManager)
+    /**
+     * Injects persistence manager
+     *
+     * @param \TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface $persistenceManager
+     * @return void
+     */
+    public function injectPersistenceManager(PersistenceManagerInterface $persistenceManager)
     {
-		$this->persistenceManager = $persistenceManager;
-	}
+        $this->persistenceManager = $persistenceManager;
+    }
 
-	/**
-	 * Injects repository for login attempt
-	 *
-	 * @param \WebentwicklerAt\Loginlimit\Domain\Repository\LoginAttemptRepository $loginAttemptRepository
-	 * @return void
-	 */
-	public function injectLoginAttemptRepository(LoginAttemptRepository $loginAttemptRepository)
+    /**
+     * Injects repository for login attempt
+     *
+     * @param \WebentwicklerAt\Loginlimit\Domain\Repository\LoginAttemptRepository $loginAttemptRepository
+     * @return void
+     */
+    public function injectLoginAttemptRepository(LoginAttemptRepository $loginAttemptRepository)
     {
-		$this->loginAttemptRepository = $loginAttemptRepository;
-	}
+        $this->loginAttemptRepository = $loginAttemptRepository;
+    }
 
-	/**
-	 * Injects repository for ban
-	 *
-	 * @param \WebentwicklerAt\Loginlimit\Domain\Repository\BanRepository $banRepository
-	 * @return void
-	 */
-	public function injectBanRepository(BanRepository $banRepository)
+    /**
+     * Injects repository for ban
+     *
+     * @param \WebentwicklerAt\Loginlimit\Domain\Repository\BanRepository $banRepository
+     * @return void
+     */
+    public function injectBanRepository(BanRepository $banRepository)
     {
-		$this->banRepository = $banRepository;
-	}
+        $this->banRepository = $banRepository;
+    }
 
-	/**
-	 * Initializes object
-	 *
-	 * @return void
-	 */
-	public function initializeObject()
+    /**
+     * Initializes object
+     *
+     * @return void
+     */
+    public function initializeObject()
     {
-		$this->settings = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('loginlimit');
-	}
+        $this->settings = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('loginlimit');
+    }
 
-	/**
-	 * Deletes all expired entries
-	 *
-	 * @return void
-	 */
-	public function deleteExpiredEntries()
+    /**
+     * Deletes all expired entries
+     *
+     * @return void
+     */
+    public function deleteExpiredEntries()
     {
-		$this->deleteExpiredLoginAttempts();
-		$this->deleteExpiredBans();
-		$this->persistenceManager->persistAll();
-	}
+        $this->deleteExpiredLoginAttempts();
+        $this->deleteExpiredBans();
+        $this->persistenceManager->persistAll();
+    }
 
-	/**
-	 * Deletes expired login attempts
-	 *
-	 * @return void
-	 */
-	protected function deleteExpiredLoginAttempts()
+    /**
+     * Deletes expired login attempts
+     *
+     * @return void
+     */
+    protected function deleteExpiredLoginAttempts()
     {
-		$findtime = $this->settings['findTime'];
-		$expiredEntries = $this->loginAttemptRepository->findExpired($findtime);
-		foreach ($expiredEntries as $expiredEntry) {
-			$this->loginAttemptRepository->remove($expiredEntry);
-		}
-	}
+        $findtime = $this->settings['findTime'];
+        $expiredEntries = $this->loginAttemptRepository->findExpired($findtime);
+        foreach ($expiredEntries as $expiredEntry) {
+            $this->loginAttemptRepository->remove($expiredEntry);
+        }
+    }
 
-	/**
-	 * Deletes expired bans
-	 *
-	 * @return void
-	 */
-	protected function deleteExpiredBans()
+    /**
+     * Deletes expired bans
+     *
+     * @return void
+     */
+    protected function deleteExpiredBans()
     {
-		$bantime = $this->settings['banTime'];
-		if ($bantime >= 0) {
-			$expiredEntries = $this->banRepository->findExpired($bantime);
-			foreach ($expiredEntries as $expiredEntry) {
-				$this->banRepository->remove($expiredEntry);
-			}
-		}
-	}
+        $bantime = $this->settings['banTime'];
+        if ($bantime >= 0) {
+            $expiredEntries = $this->banRepository->findExpired($bantime);
+            foreach ($expiredEntries as $expiredEntry) {
+                $this->banRepository->remove($expiredEntry);
+            }
+        }
+    }
 }
