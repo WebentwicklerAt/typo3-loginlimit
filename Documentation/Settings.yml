@@ -8,10 +8,10 @@
 
 ---
 conf.py:
-  copyright: 2015-2017
+  copyright: 2015-2019
   project: loginlimit
   version: 1.0
-  release: 1.0.3
+  release: 1.1.0
   intersphinx_mapping:
     t3tsref:
     - http://docs.typo3.org/typo3cms/TyposcriptReference/
