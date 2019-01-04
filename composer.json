@@ -12,8 +12,8 @@
         }
     ],
     "require": {
-        "typo3/cms": "~6.2.0 || ~7.6.0 || ~8.7.0",
-        "typo3/cms-scheduler": "~6.2.0 || ~7.6.0 || ~8.7.0"
+        "typo3/cms-core": "^8.7 || ^9.5",
+        "typo3/cms-scheduler": "^8.7 || ^9.5"
     },
     "replace": {
         "loginlimit": "self.version",
