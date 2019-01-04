@@ -24,16 +24,16 @@ use TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings;
  */
 abstract class AbstractRepository extends Repository
 {
-	/**
-	 * Sets default query settings
-	 *
-	 * @return void
-	 */
-	public function initializeObject()
+    /**
+     * Sets default query settings
+     *
+     * @return void
+     */
+    public function initializeObject()
     {
         /** @var Typo3QuerySettings $querySettings */
-		$querySettings = $this->objectManager->get(Typo3QuerySettings::class);
-		$querySettings->setStoragePageIds([0]);
-		$this->setDefaultQuerySettings($querySettings);
-	}
+        $querySettings = $this->objectManager->get(Typo3QuerySettings::class);
+        $querySettings->setStoragePageIds([0]);
+        $this->setDefaultQuerySettings($querySettings);
+    }
 }

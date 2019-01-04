@@ -21,55 +21,55 @@ namespace WebentwicklerAt\Loginlimit\Domain\Repository;
  */
 class LoginAttemptRepository extends AbstractRepository
 {
-	/**
-	 * Counts active (not expired) login attempts based on IP
-	 *
-	 * @param string $ip
-	 * @param integer $findtime
-	 * @return integer
-	 */
-	public function countLoginAttemptsByIp($ip, $findtime)
+    /**
+     * Counts active (not expired) login attempts based on IP
+     *
+     * @param string $ip
+     * @param integer $findtime
+     * @return integer
+     */
+    public function countLoginAttemptsByIp($ip, $findtime)
     {
-		$query = $this->createQuery();
+        $query = $this->createQuery();
 
-		$constraints = $query->logicalAnd(
-			$query->equals('ip', $ip),
-			$query->greaterThanOrEqual('tstamp', $GLOBALS['EXEC_TIME'] - (int)$findtime)
-		);
+        $constraints = $query->logicalAnd(
+            $query->equals('ip', $ip),
+            $query->greaterThanOrEqual('tstamp', $GLOBALS['EXEC_TIME'] - (int)$findtime)
+        );
 
-		return $query->matching($constraints)->execute()->count();
-	}
+        return $query->matching($constraints)->execute()->count();
+    }
 
-	/**
-	 * Counts active (not expired) login attempts based on username
-	 *
-	 * @param string $username
-	 * @return integer
-	 */
-	public function countLoginAttemptsByUsername($username, $findtime)
+    /**
+     * Counts active (not expired) login attempts based on username
+     *
+     * @param string $username
+     * @return integer
+     */
+    public function countLoginAttemptsByUsername($username, $findtime)
     {
-		$query = $this->createQuery();
+        $query = $this->createQuery();
 
-		$constraints = $query->logicalAnd(
-			$query->equals('username', $username),
-			$query->greaterThanOrEqual('tstamp', $GLOBALS['EXEC_TIME'] - (int)$findtime)
-		);
+        $constraints = $query->logicalAnd(
+            $query->equals('username', $username),
+            $query->greaterThanOrEqual('tstamp', $GLOBALS['EXEC_TIME'] - (int)$findtime)
+        );
 
-		return $query->matching($constraints)->execute()->count();
-	}
+        return $query->matching($constraints)->execute()->count();
+    }
 
-	/**
-	 * Finds expired login attempts
-	 *
-	 * @param integer $findtime
-	 * @return array|\TYPO3\CMS\Extbase\Persistence\QueryResultInterface
-	 */
-	public function findExpired($findtime)
+    /**
+     * Finds expired login attempts
+     *
+     * @param integer $findtime
+     * @return array|\TYPO3\CMS\Extbase\Persistence\QueryResultInterface
+     */
+    public function findExpired($findtime)
     {
-		$query = $this->createQuery();
+        $query = $this->createQuery();
 
-		$constraints = $query->lessThan('tstamp', $GLOBALS['EXEC_TIME'] - (int)$findtime);
+        $constraints = $query->lessThan('tstamp', $GLOBALS['EXEC_TIME'] - (int)$findtime);
 
-		return $query->matching($constraints)->execute();
-	}
+        return $query->matching($constraints)->execute();
+    }
 }

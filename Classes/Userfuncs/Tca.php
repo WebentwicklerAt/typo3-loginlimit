@@ -23,51 +23,51 @@ use TYPO3\CMS\Backend\Utility\BackendUtility;
  */
 class Tca
 {
-	/**
-	 * Title for login attempt table
-	 *
-	 * @param array $parameters
-	 * @param mixed $parentObject
-	 * @return void
-	 */
-	public function loginAttemptTitle(&$parameters, $parentObject)
+    /**
+     * Title for login attempt table
+     *
+     * @param array $parameters
+     * @param mixed $parentObject
+     * @return void
+     */
+    public function loginAttemptTitle(&$parameters, $parentObject)
     {
-		$this->getTitle($parameters);
-	}
+        $this->getTitle($parameters);
+    }
 
-	/**
-	 * Title for ban table
-	 *
-	 * @param array $parameters
-	 * @param mixed $parentObject
-	 * @return void
-	 */
-	public function banTitle(&$parameters, $parentObject)
+    /**
+     * Title for ban table
+     *
+     * @param array $parameters
+     * @param mixed $parentObject
+     * @return void
+     */
+    public function banTitle(&$parameters, $parentObject)
     {
-		$this->getTitle($parameters);
-	}
+        $this->getTitle($parameters);
+    }
 
-	/**
-	 * Generic title
-	 *
-	 * @param array $parameters
-	 * @return void
-	 */
-	protected function getTitle(&$parameters)
+    /**
+     * Generic title
+     *
+     * @param array $parameters
+     * @return void
+     */
+    protected function getTitle(&$parameters)
     {
-		$record = BackendUtility::getRecord($parameters['table'], $parameters['row']['uid']);
+        $record = BackendUtility::getRecord($parameters['table'], $parameters['row']['uid']);
 
-		$title = [];
-		$title[] = date(
-			$GLOBALS['TYPO3_CONF_VARS']['SYS']['ddmmyy'] . ' ' . $GLOBALS['TYPO3_CONF_VARS']['SYS']['hhmm'],
-			$record['tstamp']
-		);
-		if (strlen($record['username'])) {
-			$title[] = $record['username'];
-		}
-		if (strlen($record['ip'])) {
-			$title[] = $record['ip'];
-		}
-		$parameters['title'] = implode(' / ', $title);
-	}
+        $title = [];
+        $title[] = date(
+            $GLOBALS['TYPO3_CONF_VARS']['SYS']['ddmmyy'] . ' ' . $GLOBALS['TYPO3_CONF_VARS']['SYS']['hhmm'],
+            $record['tstamp']
+        );
+        if (strlen($record['username'])) {
+            $title[] = $record['username'];
+        }
+        if (strlen($record['ip'])) {
+            $title[] = $record['ip'];
+        }
+        $parameters['title'] = implode(' / ', $title);
+    }
 }

@@ -44,63 +44,63 @@ abstract class AbstractModel extends AbstractEntity
      */
     protected $username;
 
-	/**
-	 * Constructor
-	 *
-	 */
-	public function __construct()
+    /**
+     * Constructor
+     *
+     */
+    public function __construct()
     {
-		$this->pid = 0;
-	}
+        $this->pid = 0;
+    }
 
-	/**
-	 * @param \DateTime $tstamp
-	 * @return void
-	 */
-	public function setTstamp($tstamp)
+    /**
+     * @param \DateTime $tstamp
+     * @return void
+     */
+    public function setTstamp($tstamp)
     {
-		$this->tstamp = $tstamp;
-	}
+        $this->tstamp = $tstamp;
+    }
 
-	/**
-	 * @return \DateTime
-	 */
-	public function getTstamp()
+    /**
+     * @return \DateTime
+     */
+    public function getTstamp()
     {
-		return $this->tstamp;
-	}
+        return $this->tstamp;
+    }
 
-	/**
-	 * @param string $ip
-	 * @return void
-	 */
-	public function setIp($ip)
+    /**
+     * @param string $ip
+     * @return void
+     */
+    public function setIp($ip)
     {
-		$this->ip = $ip;
-	}
+        $this->ip = $ip;
+    }
 
-	/**
-	 * @return string
-	 */
-	public function getIp()
+    /**
+     * @return string
+     */
+    public function getIp()
     {
-		return $this->ip;
-	}
+        return $this->ip;
+    }
 
-	/**
-	 * @param string $username
-	 * @return void
-	 */
-	public function setUsername($username)
+    /**
+     * @param string $username
+     * @return void
+     */
+    public function setUsername($username)
     {
-		$this->username = $username;
-	}
+        $this->username = $username;
+    }
 
-	/**
-	 * @return string
-	 */
-	public function getUsername()
+    /**
+     * @return string
+     */
+    public function getUsername()
     {
-		return $this->username;
-	}
+        return $this->username;
+    }
 }
