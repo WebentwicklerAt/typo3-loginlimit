@@ -31,6 +31,6 @@ Add scheduler task
 
 First of all please make sure that you have installed and set-up the extension "scheduler" properly. Therefore the "Setup check" is provided in the module "Scheduler".
 
-In module "Scheduler" add a new task, select "Extbase CommandController Task" as "Class", set desired "Frequency" and select "Loginlimit Task: cleanUp" as "CommandController Command".
+In module "Scheduler" add a new task, select "Execute console commands" as "Class", set desired "Frequency" and select "loginlimit:clear: Clean up expired entries." as "Schedulable Command".
 
 If clean-up is done through scheduler task, the option "enableCleanUpAtLogin" in extension configuration should be disabled.
