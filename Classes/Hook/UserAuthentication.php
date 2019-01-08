@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace WebentwicklerAt\Loginlimit\Hook;
 
 /**
@@ -18,8 +19,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface;
-use WebentwicklerAt\Loginlimit\Domain\Model\LoginAttempt;
-use WebentwicklerAt\Loginlimit\Domain\Model\Ban;
 use WebentwicklerAt\Loginlimit\Domain\Repository\BanRepository;
 use WebentwicklerAt\Loginlimit\Domain\Repository\LoginAttemptRepository;
 
@@ -90,14 +89,14 @@ class UserAuthentication
             $loginData = $params['pObj']->getLoginFormData();
             $ip = GeneralUtility::getIndpEnv('REMOTE_ADDR');
             $username = $loginData['uname'];
-            $this->logLoginAttempt($ip, $username);
+            $this->loginAttemptRepository->addLogLoginAttempt($ip, $username);
 
-            $loginAttempts = $this->loginAttemptRepository->countLoginAttemptsByIp($ip, $this->settings['findTime']);
+            $loginAttempts = $this->loginAttemptRepository->countLoginAttemptsByIp($ip, (int)$this->settings['findTime']);
             if ($loginAttempts >= (int)$this->settings['maxRetry']) {
                 $this->ban($ip, '');
             }
 
-            $loginAttempts = $this->loginAttemptRepository->countLoginAttemptsByUsername($username, $this->settings['findTime']);
+            $loginAttempts = $this->loginAttemptRepository->countLoginAttemptsByUsername($username, (int)$this->settings['findTime']);
             if ($loginAttempts >= (int)$this->settings['maxRetry']) {
                 $this->ban('', $username);
             }
@@ -112,9 +111,9 @@ class UserAuthentication
      * Returns if login limit is active based on login type and settings
      *
      * @param array $params
-     * @return boolean
+     * @return bool
      */
-    protected function isLoginlimitActive(&$params)
+    protected function isLoginlimitActive(&$params): bool
     {
         if ($params['pObj']->loginFailure &&
             ($params['pObj']->loginType === 'FE' && $this->settings['enableFrontend'] ||
@@ -127,42 +126,19 @@ class UserAuthentication
     }
 
     /**
-     * Logs login attempt for IP and username
-     *
-     * @param string $ip
-     * @param string $username
-     * @return void
-     */
-    protected function logLoginAttempt($ip, $username)
-    {
-        $loginAttempt = $this->objectManager->get(LoginAttempt::class);
-        $loginAttempt->setIp($ip);
-        $loginAttempt->setUsername($username);
-
-        $this->loginAttemptRepository->add($loginAttempt);
-        $this->persistenceManager->persistAll();
-    }
-
-    /**
      * Bans IP and username
      *
      * @param string $ip
      * @param string $username
      * @return void
      */
-    protected function ban($ip, $username)
+    protected function ban(string $ip, string $username)
     {
         $ban = $this->banRepository->findBan($ip, $username);
-        if ($ban === null) {
-            $ban = $this->objectManager->get(Ban::class);
-            $ban->setIp($ip);
-            $ban->setUsername($username);
-            $this->banRepository->add($ban);
+        if (empty($ban)) {
+            $this->banRepository->addBan($ip, $username);
         } else {
-            $ban->setTstamp(new \DateTime('@' . $GLOBALS['EXEC_TIME']));
-            $this->banRepository->update($ban);
+            $this->banRepository->updateBanTime((int)$ban['uid']);
         }
-
-        $this->persistenceManager->persistAll();
     }
 }

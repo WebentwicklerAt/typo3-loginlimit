@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace WebentwicklerAt\Loginlimit\Service;
 
 /**
@@ -16,8 +17,6 @@ namespace WebentwicklerAt\Loginlimit\Service;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
-use TYPO3\CMS\Extbase\Object\ObjectManagerInterface;
-use TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface;
 use WebentwicklerAt\Loginlimit\Domain\Repository\BanRepository;
 use WebentwicklerAt\Loginlimit\Domain\Repository\LoginAttemptRepository;
 
@@ -29,25 +28,11 @@ use WebentwicklerAt\Loginlimit\Domain\Repository\LoginAttemptRepository;
 class CleanUpService
 {
     /**
-     * Object manager
-     *
-     * @var \TYPO3\CMS\Extbase\Object\ObjectManagerInterface
-     */
-    protected $objectManager;
-
-    /**
      * Extension manager settings
      *
      * @var array
      */
     protected $settings;
-
-    /**
-     * Persistence manager
-     *
-     * @var \TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface
-     */
-    protected $persistenceManager;
 
     /**
      * Repository for login attempt
@@ -62,28 +47,6 @@ class CleanUpService
      * @var \WebentwicklerAt\Loginlimit\Domain\Repository\BanRepository
      */
     protected $banRepository;
-
-    /**
-     * Injects object manager
-     *
-     * @param \TYPO3\CMS\Extbase\Object\ObjectManagerInterface $objectManager
-     * @return void
-     */
-    public function injectObjectManager(ObjectManagerInterface $objectManager)
-    {
-        $this->objectManager = $objectManager;
-    }
-
-    /**
-     * Injects persistence manager
-     *
-     * @param \TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface $persistenceManager
-     * @return void
-     */
-    public function injectPersistenceManager(PersistenceManagerInterface $persistenceManager)
-    {
-        $this->persistenceManager = $persistenceManager;
-    }
 
     /**
      * Injects repository for login attempt
@@ -126,7 +89,6 @@ class CleanUpService
     {
         $this->deleteExpiredLoginAttempts();
         $this->deleteExpiredBans();
-        $this->persistenceManager->persistAll();
     }
 
     /**
@@ -136,11 +98,8 @@ class CleanUpService
      */
     protected function deleteExpiredLoginAttempts()
     {
-        $findtime = $this->settings['findTime'];
-        $expiredEntries = $this->loginAttemptRepository->findExpired($findtime);
-        foreach ($expiredEntries as $expiredEntry) {
-            $this->loginAttemptRepository->remove($expiredEntry);
-        }
+        $findtime = (int)$this->settings['findTime'];
+        $this->loginAttemptRepository->deleteExpired($findtime);
     }
 
     /**
@@ -150,12 +109,9 @@ class CleanUpService
      */
     protected function deleteExpiredBans()
     {
-        $bantime = $this->settings['banTime'];
+        $bantime = (int)$this->settings['banTime'];
         if ($bantime >= 0) {
-            $expiredEntries = $this->banRepository->findExpired($bantime);
-            foreach ($expiredEntries as $expiredEntry) {
-                $this->banRepository->remove($expiredEntry);
-            }
+            $this->banRepository->deleteExpired($bantime);
         }
     }
 }
