@@ -89,7 +89,7 @@ class UserAuthentication
             $loginData = $params['pObj']->getLoginFormData();
             $ip = GeneralUtility::getIndpEnv('REMOTE_ADDR');
             $username = $loginData['uname'];
-            $this->logLoginAttempt($ip, $username);
+            $this->loginAttemptRepository->addLogLoginAttempt($ip, $username);
 
             $loginAttempts = $this->loginAttemptRepository->countLoginAttemptsByIp($ip, (int)$this->settings['findTime']);
             if ($loginAttempts >= (int)$this->settings['maxRetry']) {
@@ -126,25 +126,13 @@ class UserAuthentication
     }
 
     /**
-     * Logs login attempt for IP and username
-     *
-     * @param string $ip
-     * @param string $username
-     * @return void
-     */
-    protected function logLoginAttempt($ip, $username)
-    {
-        $this->loginAttemptRepository->addLogLoginAttempt($ip, $username);
-    }
-
-    /**
      * Bans IP and username
      *
      * @param string $ip
      * @param string $username
      * @return void
      */
-    protected function ban($ip, $username)
+    protected function ban(string $ip, string $username)
     {
         $ban = $this->banRepository->findBan($ip, $username);
         if (empty($ban)) {

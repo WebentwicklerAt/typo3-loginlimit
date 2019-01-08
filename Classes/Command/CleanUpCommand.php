@@ -24,7 +24,7 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
 use WebentwicklerAt\Loginlimit\Service\CleanUpService;
 
 /**
- * Extbase CommandController Task
+ * Extbase Command Task
  *
  * @author Dmytro Nozdrin <public.team.osi@gmail.com>
  */
