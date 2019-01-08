@@ -3,10 +3,10 @@ defined('TYPO3_MODE') or die();
 
 return [
     'ctrl' => [
-        'title' => 'LLL:EXT:loginlimit/Resources/Private/Language/locallang.xlf:tx_loginlimit_domain_model_loginattempt',
+        'title' => 'LLL:EXT:loginlimit/Resources/Private/Language/locallang.xlf:tx_loginlimit_loginattempt',
         'label' => 'tstamp',
         'label_userFunc' => 'WebentwicklerAt\\Loginlimit\\Userfuncs\\Tca->loginAttemptTitle',
-        'iconfile' => 'EXT:loginlimit/Resources/Public/Icons/tx_loginlimit_domain_model_loginattempt.png',
+        'iconfile' => 'EXT:loginlimit/Resources/Public/Icons/tx_loginlimit_loginattempt.png',
         'default_sortby' => 'tstamp DESC',
         'tstamp' => 'tstamp',
         'rootLevel' => 1,
