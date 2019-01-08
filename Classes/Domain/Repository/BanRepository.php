@@ -99,6 +99,7 @@ class BanRepository extends AbstractRepository
     /**
      * @param string $ip
      * @param string $username
+     * @return void
      */
     public function addBan(string $ip, string $username)
     {
@@ -120,6 +121,7 @@ class BanRepository extends AbstractRepository
 
     /**
      * @param int $uid
+     * @return void
      */
     public function updateBanTime(int $uid)
     {
