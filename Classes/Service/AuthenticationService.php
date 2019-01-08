@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace WebentwicklerAt\Loginlimit\Service;
 
 /**
@@ -20,7 +21,6 @@ use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Authentication\AbstractAuthenticationService;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Frontend\Page\PageRepository;
-use WebentwicklerAt\Loginlimit\Domain\Repository\LoginAttemptRepository;
 use WebentwicklerAt\Loginlimit\Domain\Repository\BanRepository;
 
 /**
@@ -36,13 +36,6 @@ class AuthenticationService extends AbstractAuthenticationService
      * @var \TYPO3\CMS\Extbase\Object\ObjectManagerInterface
      */
     protected $objectManager;
-
-    /**
-     * Repository for login attempt
-     *
-     * @var \WebentwicklerAt\Loginlimit\Domain\Repository\LoginAttemptRepository
-     */
-    protected $loginAttemptRepository;
 
     /**
      * Repository for ban
@@ -62,9 +55,9 @@ class AuthenticationService extends AbstractAuthenticationService
      * Checks if service is available
      * Instantiate required objects
      *
-     * @return boolean
+     * @return bool
      */
-    public function init()
+    public function init(): bool
     {
         // in frontend TCA is not loaded
         if (TYPO3_MODE === 'FE') {
@@ -116,7 +109,7 @@ class AuthenticationService extends AbstractAuthenticationService
      *                 <= 0:   Authentication failed, no more checking needed
      *                         by other auth services.
      */
-    public function authUser(array $user)
+    public function authUser(array $user): int
     {
         $ok = 100;
 
@@ -130,9 +123,9 @@ class AuthenticationService extends AbstractAuthenticationService
     /**
      * Returns if login limit is active based on login type and settings
      *
-     * @return boolean
+     * @return bool
      */
-    protected function isLoginlimitActive()
+    protected function isLoginlimitActive(): bool
     {
         if (($this->authInfo['loginType'] === 'FE' && $this->settings['enableFrontend'] ||
             $this->authInfo['loginType'] === 'BE' && $this->settings['enableBackend'])
@@ -146,32 +139,18 @@ class AuthenticationService extends AbstractAuthenticationService
     /**
      * Returns if IP or username is banned
      *
-     * @return boolean
+     * @return bool
      */
-    protected function isBanned()
+    protected function isBanned(): bool
     {
         $ip = GeneralUtility::getIndpEnv('REMOTE_ADDR');
         $username = $this->login['uname'];
+        $this->banRepository = $this->objectManager->get(BanRepository::class);
 
-        if ($this->getBanRepository()->findActiveBan($ip, $username, $this->settings['banTime'])) {
+        if ($this->banRepository->findActiveBan($ip, $username, (int)$this->settings['banTime'])) {
             return true;
         }
 
         return false;
-    }
-    
-    /**
-     * Helper to get ban repository
-     * Only instantiate object if required
-     *
-     * @return \WebentwicklerAt\Loginlimit\Domain\Repository\BanRepository
-     */
-    protected function getBanRepository()
-    {
-        if (!isset($this->banRepository)) {
-            $this->banRepository = $this->objectManager->get(BanRepository::class);
-        }
-
-        return $this->banRepository;
     }
 }

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace WebentwicklerAt\Loginlimit\Domain\Repository;
 
 /**
@@ -15,30 +16,49 @@ namespace WebentwicklerAt\Loginlimit\Domain\Repository;
  */
 
 /**
- * Repository for \WebentwicklerAt\Loginlimit\Domain\Model\Ban
+ * Repository for ban records
  *
  * @author Gernot Leitgab <https://webentwickler.at>
  */
 class BanRepository extends AbstractRepository
 {
     /**
+     * @var string
+     */
+    protected $table = 'tx_loginlimit_ban';
+
+    /**
+     * @return string
+     */
+    protected function getTable(): string
+    {
+        return $this->table;
+    }
+
+    /**
      * Finds first ban based on IP or username
      *
      * @param string $ip
      * @param string $username
-     * @return object
+     * @return array
      */
-    public function findBan($ip, $username)
+    public function findBan(string $ip, $username): array
     {
-        $query = $this->createQuery();
+        $table = $this->getTable();
+        $queryBuilder = $this->instantiateQueryBuilderForTable($table);
 
-        $constraints = $query->logicalOr(
-            $query->equals('ip', $ip),
-            $query->equals('username', $username)
-        );
+        $statement = $queryBuilder
+            ->select('*')
+            ->from($table)
+            ->where(
+                $queryBuilder->expr()->eq('ip', $queryBuilder->createNamedParameter($ip)),
+                $queryBuilder->expr()->eq('username', $queryBuilder->createNamedParameter($username))
+            )
+            ->setMaxResults(1)
+            ->execute();
 
-        $result = $query->matching($constraints)->setLimit(1)->execute();
-        return $result->getFirst();
+        $result = $statement->fetch();
+        return $result ?: [];
     }
 
     /**
@@ -46,45 +66,72 @@ class BanRepository extends AbstractRepository
      *
      * @param string $ip
      * @param string $username
-     * @param integer $bantime
-     * @return object
+     * @param int $bantime
+     * @return array
      */
-    public function findActiveBan($ip, $username, $bantime)
+    public function findActiveBan(string $ip, string $username, int $bantime): array
     {
-        $query = $this->createQuery();
+        $table = $this->getTable();
+        $queryBuilder = $this->instantiateQueryBuilderForTable($table);
 
-        $constraints = $query->logicalOr(
-            $query->equals('ip', $ip),
-            $query->equals('username', $username)
-        );
+        $queryBuilder
+            ->select('*')
+            ->from($table)
+            ->where(
+                $queryBuilder->expr()->eq('ip', $queryBuilder->createNamedParameter($ip)),
+                $queryBuilder->expr()->eq('username', $queryBuilder->createNamedParameter($username))
+            );
+
         if ($bantime >= 0) {
-            $constraints = $query->logicalAnd(
-                $constraints,
-                $query->greaterThanOrEqual('tstamp', $GLOBALS['EXEC_TIME'] - (int)$bantime)
+            $queryBuilder->andWhere(
+                $queryBuilder->expr()->gte('tstamp', $queryBuilder->createNamedParameter($GLOBALS['EXEC_TIME'] - (int)$bantime, \PDO::PARAM_INT))
             );
         }
 
-        $result = $query->matching($constraints)->setLimit(1)->execute();
-        return $result->getFirst();
+        $statement = $queryBuilder
+            ->setMaxResults(1)
+            ->execute();
+
+        $result = $statement->fetch();
+        return $result ?: [];
     }
 
     /**
-     * Finds expired bans
-     *
-     * @param integer $bantime
-     * @return array|\TYPO3\CMS\Extbase\Persistence\QueryResultInterface
+     * @param string $ip
+     * @param string $username
      */
-    public function findExpired($bantime)
+    public function addBan(string $ip, string $username)
     {
-        $result = [];
-        if ($bantime >= 0) {
-            $query = $this->createQuery();
+        $table = $this->getTable();
+        $queryBuilder = $this->instantiateQueryBuilderForTable($table);
 
-            $constraints = $query->lessThan('tstamp', $GLOBALS['EXEC_TIME'] - (int)$bantime);
+        $queryBuilder
+            ->insert($table)
+            ->values(
+                [
+                    'pid' => 0,
+                    'tstamp' => $GLOBALS['EXEC_TIME'],
+                    'ip' => $ip,
+                    'username' => $username,
+                ]
+            )
+            ->execute();
+    }
 
-            $result = $query->matching($constraints)->execute();
-        }
+    /**
+     * @param int $uid
+     */
+    public function updateBanTime(int $uid)
+    {
+        $table = $this->getTable();
+        $queryBuilder = $this->instantiateQueryBuilderForTable($table);
 
-        return $result;
+        $queryBuilder
+            ->update($table)
+            ->where(
+                $queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($uid, \PDO::PARAM_INT))
+            )
+            ->set('tstamp', $GLOBALS['EXEC_TIME'])
+            ->execute();
     }
 }

@@ -14,26 +14,51 @@ namespace WebentwicklerAt\Loginlimit\Domain\Repository;
  * The TYPO3 project - inspiring people to share!
  */
 
-use TYPO3\CMS\Extbase\Persistence\Repository;
-use TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 
 /**
  * Abstract repository
  *
  * @author Gernot Leitgab <https://webentwickler.at>
  */
-abstract class AbstractRepository extends Repository
+abstract class AbstractRepository
 {
     /**
-     * Sets default query settings
+     * @param string $table
+     * @return QueryBuilder
+     */
+    protected function instantiateQueryBuilderForTable(string $table): QueryBuilder
+    {
+        /** @var \TYPO3\CMS\Core\Database\Connection $connection */
+        $connection = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getConnectionForTable($table);
+
+        return $connection->createQueryBuilder();
+    }
+
+    /**
+     * @return string
+     */
+    abstract protected function getTable(): string;
+
+    /**
+     * Delete expired records (bans / login attempts)
      *
+     * @param int $time
      * @return void
      */
-    public function initializeObject()
+    public function deleteExpired(int $time)
     {
-        /** @var Typo3QuerySettings $querySettings */
-        $querySettings = $this->objectManager->get(Typo3QuerySettings::class);
-        $querySettings->setStoragePageIds([0]);
-        $this->setDefaultQuerySettings($querySettings);
+        $table = $this->getTable();
+        $queryBuilder = $this->instantiateQueryBuilderForTable($table);
+
+        $queryBuilder
+            ->delete($table)
+            ->where(
+                $queryBuilder->expr()->lt('tstamp', $queryBuilder->createNamedParameter($GLOBALS['EXEC_TIME'] - (int)$time, \PDO::PARAM_INT))
+            )
+            ->execute();
     }
 }
