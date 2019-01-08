@@ -11,12 +11,13 @@
 ChangeLog
 =========
 
-loginlimit 1.1.0, 2019-01-04
+loginlimit 2.0.0, 2019-01-08
 ----------------------------
 - Code clean up.
 - Compatibility with TYPO3 9.5.
 - Drop support of TYPO3 6.2 and 7.6.
 - Use symfony console commands instead of TYPO3 command controllers.
+- Fix table mapping error.
 
 loginlimit 1.0.3, 2017-09-23
 ----------------------------
